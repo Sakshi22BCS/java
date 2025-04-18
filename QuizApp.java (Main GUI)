@@ -1,0 +1,75 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public class QuizApp extends JFrame implements ActionListener {
+    ArrayList<Question> questions;
+    int current = 0, score = 0;
+    JLabel qLabel;
+    JRadioButton[] options;
+    ButtonGroup group;
+    JButton nextBtn;
+    
+    public QuizApp(ArrayList<Question> questions) {
+        this.questions = questions;
+        
+        setTitle("Online Quiz");
+        setSize(600, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        qLabel = new JLabel();
+        add(qLabel, BorderLayout.NORTH);
+
+        JPanel optionPanel = new JPanel(new GridLayout(4, 1));
+        options = new JRadioButton[4];
+        group = new ButtonGroup();
+        
+        for(int i = 0; i < 4; i++) {
+            options[i] = new JRadioButton();
+            group.add(options[i]);
+            optionPanel.add(options[i]);
+        }
+
+        add(optionPanel, BorderLayout.CENTER);
+
+        nextBtn = new JButton("Next");
+        nextBtn.addActionListener(this);
+        add(nextBtn, BorderLayout.SOUTH);
+
+        loadQuestion();
+        setVisible(true);
+    }
+
+    void loadQuestion() {
+        group.clearSelection();
+        Question q = questions.get(current);
+        qLabel.setText("Q" + (current+1) + ": " + q.question);
+        for(int i = 0; i < 4; i++) {
+            options[i].setText(q.options[i]);
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        int selected = -1;
+        for(int i = 0; i < 4; i++) {
+            if(options[i].isSelected()) {
+                selected = i;
+            }
+        }
+
+        if(selected == questions.get(current).correctAnswer) {
+            score++;
+        }
+
+        current++;
+        if(current < questions.size()) {
+            loadQuestion();
+        } else {
+            JOptionPane.showMessageDialog(this, "Quiz Over! Your score: " + score);
+            System.exit(0);
+        }
+    }
+}
