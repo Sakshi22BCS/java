@@ -1,0 +1,12 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+            ArrayList<Question> questions = QuestionLoader.loadQuestions("questions.txt");
+            new QuizApp(questions);
+        } catch (Exception e) {
+            System.out.println("Failed to load questions: " + e.getMessage());
+        }
+    }
+}
